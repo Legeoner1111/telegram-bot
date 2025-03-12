@@ -22,21 +22,21 @@ QUESTION_1, QUESTION_2, QUESTION_3, QUESTION_4, QUESTION_5, QUESTION_6, QUESTION
 user_answers = {}
 
 # Начало теста
-def start(update: Update, context: CallbackContext) -> int:
+async def start(update: Update, context: CallbackContext) -> int:
     keyboard = [
         [InlineKeyboardButton("Начать тест", callback_data="start_quiz")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(
+    await update.message.reply_text(
         "Добро пожаловать! Этот тест поможет найти идеальный отель для вашего отдыха.\n"
         "Нажмите кнопку ниже, чтобы начать.",
         reply_markup=reply_markup
     )
     return QUESTION_1
 
-def question_1(update: Update, context: CallbackContext) -> int:
+async def question_1(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
-    query.answer()
+    await query.answer()
     user_answers[1] = query.data  # Сохраняем ответ пользователя
     keyboard = [
         [InlineKeyboardButton("В самом сердце исторического центра (Китай-город)", callback_data="1_a")],
@@ -45,15 +45,15 @@ def question_1(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("На природе с полным погружением в экологичную среду (Глэмпинг)", callback_data="1_d")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(
+    await query.edit_message_text(
         text="Как вы представляете свой идеальный отдых?",
         reply_markup=reply_markup
     )
     return QUESTION_2
 
-def question_2(update: Update, context: CallbackContext) -> int:
+async def question_2(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
-    query.answer()
+    await query.answer()
     user_answers[2] = query.data  # Сохраняем ответ пользователя
     keyboard = [
         [InlineKeyboardButton("Активный отдых (экскурсии, прогулки)", callback_data="2_a")],
@@ -62,17 +62,114 @@ def question_2(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("Романтический отдых (для двоих)", callback_data="2_d")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(
+    await query.edit_message_text(
         text="Какой тип отдыха вы предпочитаете?",
         reply_markup=reply_markup
     )
     return QUESTION_3
 
-# Остальные функции остаются без изменений...
-
-def result(update: Update, context: CallbackContext) -> int:
+async def question_3(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
-    query.answer()
+    await query.answer()
+    user_answers[3] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Люксовые апартаменты", callback_data="3_a")],
+        [InlineKeyboardButton("Стандартные номера", callback_data="3_b")],
+        [InlineKeyboardButton("Хостел или общежитие", callback_data="3_c")],
+        [InlineKeyboardButton("Кемпинг или палатка", callback_data="3_d")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Какие условия проживания вы предпочитаете?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_4
+
+async def question_4(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[4] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Рестораны высокой кухни", callback_data="4_a")],
+        [InlineKeyboardButton("Уютные кафе и закусочные", callback_data="4_b")],
+        [InlineKeyboardButton("Фастфуд и уличная еда", callback_data="4_c")],
+        [InlineKeyboardButton("Самостоятельное приготовление еды", callback_data="4_d")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Какую еду вы предпочитаете во время отдыха?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_5
+
+async def question_5(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[5] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Пешком", callback_data="5_a")],
+        [InlineKeyboardButton("Общественный транспорт", callback_data="5_b")],
+        [InlineKeyboardButton("Такси или каршеринг", callback_data="5_c")],
+        [InlineKeyboardButton("Аренда автомобиля", callback_data="5_d")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Как вы предпочитаете передвигаться по городу?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_6
+
+async def question_6(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[6] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Да, обязательно!", callback_data="6_a")],
+        [InlineKeyboardButton("Нет, только если это бесплатно", callback_data="6_b")],
+        [InlineKeyboardButton("Зависит от условий", callback_data="6_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Готовы ли вы платить за дополнительные услуги (спа, экскурсии)?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_7
+
+async def question_7(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[7] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Да, я люблю шумные места", callback_data="7_a")],
+        [InlineKeyboardButton("Нет, я предпочитаю тишину", callback_data="7_b")],
+        [InlineKeyboardButton("Зависит от настроения", callback_data="7_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Любите ли вы шумные места с большим количеством людей?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_8
+
+async def question_8(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[8] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Да, я готов забронировать прямо сейчас", callback_data="8_a")],
+        [InlineKeyboardButton("Нет, я хочу подумать", callback_data="8_b")],
+        [InlineKeyboardButton("Я хочу посмотреть другие варианты", callback_data="8_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Готовы ли вы забронировать отель прямо сейчас?",
+        reply_markup=reply_markup
+    )
+    return RESULT
+
+async def result(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
     user_answers[8] = query.data
 
     # Анализ ответов
@@ -95,22 +192,22 @@ def result(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("Посмотреть другие варианты", url="https://norke.ru")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text(
+    await query.edit_message_text(
         text=f"Поздравляем! Ваш идеальный вариант - {hotel}.\n"
              f"Мы подготовили специальное предложение специально для вас!",
         reply_markup=reply_markup
     )
     return ConversationHandler.END
 
-def cancel(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text("Тест завершен. Если хотите повторить, нажмите /start.")
+async def cancel(update: Update, context: CallbackContext) -> int:
+    await update.message.reply_text("Тест завершен. Если хотите повторить, нажмите /start.")
     return ConversationHandler.END
 
 # Маршрут для вебхука
 @app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
-    update = Update.de_json(request.get_json(force=True), app)
-    app.process_update(update)
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    application.process_update(update)
     return "OK"
 
 # Запуск сервера
@@ -140,12 +237,12 @@ if __name__ == "__main__":
     application.add_handler(conv_handler)
 
     # Публичный URL от Render
-    render_url = "https://telegram-bot-d8rq.onrender.com"  # Замени на свой реальный Render URL
+    render_url = "https://telegram-bot-d8rq.onrender.com"  # Ваш реальный Render URL
 
     # Установка вебхука
     application.run_webhook(
         listen="0.0.0.0",
-        port=8080,
+        port=8080,  # Render использует порт 8080
         url_path=TOKEN,
-        webhook_url=f"{render_url}/{TOKEN}"
-    )
+        webhook_url=f"{render_url}/{TOKEN}"  # Полный URL для вебхука
+)
