@@ -171,27 +171,44 @@ async def result(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     await query.answer()
     user_answers[8] = query.data
+
     # Анализ ответов
-    answers = list(user_answers.values())
-    if answers.count("1_a") + answers.count("2_a") + answers.count("3_a") > 4:
-        hotel = "Китай-город"
-        url = "https://norke.ru/hotel1"
-    elif answers.count("1_b") + answers.count("2_b") + answers.count("7_a") > 4:
-        hotel = "Сретенская/Курская"
-        url = "https://norke.ru/hotel2"
-    elif answers.count("1_c") + answers.count("2_c") + answers.count("3_c") > 4:
-        hotel = "Бауманская/Первомайская"
-        url = "https://norke.ru/hotel3"
-    else:
-        hotel = "Глэмпинг"
-        url = "https://norke.ru/glamping"
+    scores = {
+        "Китай-город": 0,
+        "Сретенская/Курская": 0,
+        "Бауманская/Первомайская": 0,
+        "Глэмпинг": 0,
+    }
+
+    for answer in user_answers.values():
+        if answer in ["1_a", "2_a", "3_a"]:
+            scores["Китай-город"] += 1
+        elif answer in ["1_b", "2_b", "7_a"]:
+            scores["Сретенская/Курская"] += 1
+        elif answer in ["1_c", "2_c", "3_c"]:
+            scores["Бауманская/Первомайская"] += 1
+        else:
+            scores["Глэмпинг"] += 1
+
+    # Выбираем вариант с максимальным количеством баллов
+    best_option = max(scores, key=scores.get)
+
+    # Определяем URL для бронирования
+    hotel_urls = {
+        "Китай-город": "https://norke.ru/hotel1",
+        "Сретенская/Курская": "https://norke.ru/hotel2",
+        "Бауманская/Первомайская": "https://norke.ru/hotel3",
+        "Глэмпинг": "https://norke.ru/glamping",
+    }
+    url = hotel_urls[best_option]
+
     keyboard = [
         [InlineKeyboardButton("Забронировать этот вариант", url=url)],
         [InlineKeyboardButton("Посмотреть другие варианты", url="https://norke.ru")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await query.edit_message_text(
-        text=f"Поздравляем! Ваш идеальный вариант - {hotel}.\n"
+        text=f"Поздравляем! Ваш идеальный вариант - {best_option}.\n"
              f"Мы подготовили специальное предложение специально для вас!",
         reply_markup=reply_markup
     )
@@ -233,11 +250,11 @@ if __name__ == "__main__":
     )
     application.add_handler(conv_handler)
     # Публичный URL от Render
-    render_url = "https://your-render-url.onrender.com"  # Замените на ваш реальный Render URL
+    render_url = "https://srv-cv868it2ng1s73b80eog.onrender.com"  # Замените на ваш реальный Render URL
     # Установка вебхука
     application.run_webhook(
         listen="0.0.0.0",
-        port=8080,  # Render использует порт 8080
+        port=8080,
         url_path=TOKEN,
-        webhook_url=f"{render_url}/{TOKEN}"  # Полный URL для вебхука
+        webhook_url=f"{render_url}/{TOKEN}"
     )
