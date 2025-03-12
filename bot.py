@@ -244,9 +244,9 @@ if __name__ == "__main__":
             RESULT: [CallbackQueryHandler(result)],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
-        per_message=False,  # Явно указываем параметр
-        per_chat=True,      # Отслеживаем состояние для каждого чата
-        per_user=True       # Отслеживаем состояние для каждого пользователя
+        per_message=True,  # Явно указываем параметр
+        per_chat=True,     # Отслеживаем состояние для каждого чата
+        per_user=True      # Отслеживаем состояние для каждого пользователя
     )
     application.add_handler(conv_handler)
     # Публичный URL от Render
