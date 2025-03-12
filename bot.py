@@ -15,9 +15,12 @@ app = Flask(__name__)
 # Токен твоего бота
 TOKEN = "7575514249:AAEZd9zzOQKTJdRcwu9kgSG3SF0-7HQpa5k"
 
+# Состояния диалога
+STEPS = range(9)
+
 # Конфигурация вопросов и вариантов ответов
 QUESTIONS = {
-    "QUESTION_1": {
+    0: {
         "text": "Как вы представляете свой идеальный отдых?",
         "options": [
             ("В самом сердце исторического центра (Китай-город)", "1_a"),
@@ -26,7 +29,7 @@ QUESTIONS = {
             ("На природе с полным погружением в экологичную среду (Глэмпинг)", "1_d"),
         ],
     },
-    "QUESTION_2": {
+    1: {
         "text": "Какой тип отдыха вы предпочитаете?",
         "options": [
             ("Активный отдых (экскурсии, прогулки)", "2_a"),
@@ -51,9 +54,6 @@ SCORES = {
     # Добавьте веса для всех вариантов ответов
 }
 
-# Состояния диалога
-STEPS = range(len(QUESTIONS) + 1)
-
 # Начало теста
 async def start(update: Update, context: CallbackContext) -> int:
     keyboard = [[InlineKeyboardButton("Начать тест", callback_data="start_quiz")]]
@@ -74,8 +74,7 @@ async def handle_question(update: Update, context: CallbackContext) -> int:
     if step >= len(QUESTIONS):
         return await result(update, context)
 
-    question_key = f"QUESTION_{step + 1}"
-    question = QUESTIONS[question_key]
+    question = QUESTIONS[step]
 
     # Сохраняем ответ пользователя
     if step > 0:
@@ -148,7 +147,7 @@ if __name__ == "__main__":
         entry_points=[CommandHandler("start", start)],
         states={i: [CallbackQueryHandler(handle_question)] for i in STEPS},
         fallbacks=[CommandHandler("cancel", cancel)],
-        per_message=False,
+        per_message=True,  # Явно указываем параметр
         per_chat=True,
         per_user=True,
     )
