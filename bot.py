@@ -51,6 +51,23 @@ def question_1(update: Update, context: CallbackContext) -> int:
     )
     return QUESTION_2
 
+def question_2(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    query.answer()
+    user_answers[2] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Активный отдых (экскурсии, прогулки)", callback_data="2_a")],
+        [InlineKeyboardButton("Спокойный отдых (чтение книг, медитация)", callback_data="2_b")],
+        [InlineKeyboardButton("Семейный отдых (с детьми, активности для всей семьи)", callback_data="2_c")],
+        [InlineKeyboardButton("Романтический отдых (для двоих)", callback_data="2_d")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text(
+        text="Какой тип отдыха вы предпочитаете?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_3
+
 # Остальные функции остаются без изменений...
 
 def result(update: Update, context: CallbackContext) -> int:
@@ -115,20 +132,20 @@ if __name__ == "__main__":
             QUESTION_8: [CallbackQueryHandler(question_8)],
             RESULT: [CallbackQueryHandler(result)],
         },
-        fallbacks=[CommandHandler('cancel', cancel)],  # Используем правильное имя функции
+        fallbacks=[CommandHandler('cancel', cancel)],
         per_message=False,
         per_chat=True,
         per_user=True
     )
     application.add_handler(conv_handler)
 
-    # Публичный URL от Localtunnel
-    locatunnel_url = "https://tall-snakes-rush.loca.lt"  # Замени на свой Localtunnel URL
+    # Публичный URL от Render
+    render_url = "https://telegram-bot-d8rq.onrender.com"  # Замени на свой реальный Render URL
 
     # Установка вебхука
     application.run_webhook(
         listen="0.0.0.0",
         port=8080,
         url_path=TOKEN,
-        webhook_url=f"{locatunnel_url}/{TOKEN}"
+        webhook_url=f"{render_url}/{TOKEN}"
     )
