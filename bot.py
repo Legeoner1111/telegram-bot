@@ -246,4 +246,15 @@ if __name__ == "__main__":
         fallbacks=[CommandHandler('cancel', cancel)],
         per_message=False,  # Явно указываем параметр
         per_chat=True,      # Отслеживаем состояние для каждого чата
-        per_user=True       # Отслеж
+        per_user=True       # Отслеживаем состояние для каждого пользователя
+    )
+    application.add_handler(conv_handler)
+    # Публичный URL от Render
+    render_url = "https://srv-cv868it2ng1s73b80eog.onrender.com"  # Замените на ваш реальный Render URL
+    # Установка вебхука
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=8080,
+        url_path=TOKEN,
+        webhook_url=f"{render_url}/{TOKEN}"
+    )
