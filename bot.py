@@ -231,7 +231,7 @@ if __name__ == "__main__":
     application = Application.builder().token(TOKEN).build()
     # Добавление обработчиков
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', start)],  # Используем CommandHandler для старта
         states={
             QUESTION_1: [CallbackQueryHandler(question_1)],
             QUESTION_2: [CallbackQueryHandler(question_2)],
@@ -244,9 +244,9 @@ if __name__ == "__main__":
             RESULT: [CallbackQueryHandler(result)],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
-        per_message=True,  # Отслеживать каждое сообщение
-        per_chat=True,     # Отслеживаем состояние для каждого чата
-        per_user=True      # Отслеживаем состояние для каждого пользователя
+        per_message=False,  # Устанавливаем False, чтобы избежать предупреждений
+        per_chat=True,      # Отслеживаем состояние для каждого чата
+        per_user=True       # Отслеживаем состояние для каждого пользователя
     )
     application.add_handler(conv_handler)
     # Публичный URL от Render
