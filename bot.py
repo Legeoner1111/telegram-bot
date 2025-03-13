@@ -189,4 +189,80 @@ async def question_5(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("🚶‍♂️ Пешком", callback_data="5_a")],
         [InlineKeyboardButton("🚇 Общественный транспорт", callback_data="5_b")],
         [InlineKeyboardButton("🚕 Такси или каршеринг", callback_data="5_c")],
-        [InlineKeyboardButton("🚙 Аренда автомобиля", callback_data="5
+        [InlineKeyboardButton("🚙 Аренда автомобиля", callback_data="5_d")],  # Исправленная строка
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.message.reply_text(
+        text="Выберите вариант:",
+        reply_markup=reply_markup
+    )
+    return QUESTION_6
+
+async def question_6(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[6] = query.data  # Сохраняем ответ пользователя
+
+    # Отправка картинки
+    await query.message.reply_photo(
+        photo=IMAGE_URLS["question_6"],  # Замените на реальный URL
+        caption="💆 Готовы ли вы платить за дополнительные услуги (спа, экскурсии)?",
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("✅ Да, обязательно!", callback_data="6_a")],
+        [InlineKeyboardButton("❌ Нет, только если это бесплатно", callback_data="6_b")],
+        [InlineKeyboardButton("🤔 Зависит от условий", callback_data="6_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.message.reply_text(
+        text="Выберите вариант:",
+        reply_markup=reply_markup
+    )
+    return QUESTION_7
+
+async def question_7(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[7] = query.data  # Сохраняем ответ пользователя
+
+    # Отправка картинки
+    await query.message.reply_photo(
+        photo=IMAGE_URLS["question_7"],  # Замените на реальный URL
+        caption="🎶 Любите ли вы шумные места с большим количеством людей?",
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("🎉 Да, я люблю шумные места", callback_data="7_a")],
+        [InlineKeyboardButton("🔇 Нет, я предпочитаю тишину", callback_data="7_b")],
+        [InlineKeyboardButton("🤷‍♂️ Зависит от настроения", callback_data="7_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.message.reply_text(
+        text="Выберите вариант:",
+        reply_markup=reply_markup
+    )
+    return QUESTION_8
+
+async def question_8(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[8] = query.data  # Сохраняем ответ пользователя
+
+    # Отправка картинки
+    await query.message.reply_photo(
+        photo=IMAGE_URLS["question_8"],  # Замените на реальный URL
+        caption="📝 Готовы ли вы забронировать отель прямо сейчас?",
+    )
+
+    keyboard = [
+        [InlineKeyboardButton("✅ Да, я готов забронировать", callback_data="8_a")],
+        [InlineKeyboardButton("⏳ Нет, я хочу подумать", callback_data="8_b")],
+        [InlineKeyboardButton("🔍 Я хочу посмотреть другие варианты", callback_data="8_c")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.message.reply_text(
+        text="Выберите вариант:",
+        reply_markup=reply_markup
+    )
+    return RESULT
