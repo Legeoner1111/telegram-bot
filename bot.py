@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
+import os  # Импортируем модуль os
 from flask import Flask, request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
@@ -51,6 +51,23 @@ async def question_1(update: Update, context: CallbackContext) -> int:
         reply_markup=reply_markup
     )
     return QUESTION_2
+
+async def question_2(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+    user_answers[2] = query.data  # Сохраняем ответ пользователя
+    keyboard = [
+        [InlineKeyboardButton("Активный отдых (экскурсии, прогулки)", callback_data="2_a")],
+        [InlineKeyboardButton("Спокойный отдых (чтение книг, медитация)", callback_data="2_b")],
+        [InlineKeyboardButton("Семейный отдых (с детьми, активности для всей семьи)", callback_data="2_c")],
+        [InlineKeyboardButton("Романтический отдых (для двоих)", callback_data="2_d")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text="Какой тип отдыха вы предпочитаете?",
+        reply_markup=reply_markup
+    )
+    return QUESTION_3
 
 # Остальные функции остаются без изменений...
 
@@ -105,7 +122,7 @@ if __name__ == "__main__":
         entry_points=[CommandHandler('start', start)],
         states={
             QUESTION_1: [CallbackQueryHandler(question_1)],
-            QUESTION_2: [CallbackQueryHandler(question_2)],
+            QUESTION_2: [CallbackQueryHandler(question_2)],  # Исправлено название функции
             QUESTION_3: [CallbackQueryHandler(question_3)],
             QUESTION_4: [CallbackQueryHandler(question_4)],
             QUESTION_5: [CallbackQueryHandler(question_5)],
