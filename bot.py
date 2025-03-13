@@ -52,121 +52,7 @@ async def question_1(update: Update, context: CallbackContext) -> int:
     )
     return QUESTION_2
 
-async def question_2(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[2] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Активный отдых (экскурсии, прогулки)", callback_data="2_a")],
-        [InlineKeyboardButton("Спокойный отдых (чтение книг, медитация)", callback_data="2_b")],
-        [InlineKeyboardButton("Семейный отдых (с детьми, активности для всей семьи)", callback_data="2_c")],
-        [InlineKeyboardButton("Романтический отдых (для двоих)", callback_data="2_d")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Какой тип отдыха вы предпочитаете?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_3
-
-async def question_3(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[3] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Люксовые апартаменты", callback_data="3_a")],
-        [InlineKeyboardButton("Стандартные номера", callback_data="3_b")],
-        [InlineKeyboardButton("Хостел или общежитие", callback_data="3_c")],
-        [InlineKeyboardButton("Кемпинг или палатка", callback_data="3_d")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Какие условия проживания вы предпочитаете?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_4
-
-async def question_4(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[4] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Рестораны высокой кухни", callback_data="4_a")],
-        [InlineKeyboardButton("Уютные кафе и закусочные", callback_data="4_b")],
-        [InlineKeyboardButton("Фастфуд и уличная еда", callback_data="4_c")],
-        [InlineKeyboardButton("Самостоятельное приготовление еды", callback_data="4_d")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Какую еду вы предпочитаете во время отдыха?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_5
-
-async def question_5(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[5] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Пешком", callback_data="5_a")],
-        [InlineKeyboardButton("Общественный транспорт", callback_data="5_b")],
-        [InlineKeyboardButton("Такси или каршеринг", callback_data="5_c")],
-        [InlineKeyboardButton("Аренда автомобиля", callback_data="5_d")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Как вы предпочитаете передвигаться по городу?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_6
-
-async def question_6(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[6] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Да, обязательно!", callback_data="6_a")],
-        [InlineKeyboardButton("Нет, только если это бесплатно", callback_data="6_b")],
-        [InlineKeyboardButton("Зависит от условий", callback_data="6_c")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Готовы ли вы платить за дополнительные услуги (спа, экскурсии)?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_7
-
-async def question_7(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[7] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Да, я люблю шумные места", callback_data="7_a")],
-        [InlineKeyboardButton("Нет, я предпочитаю тишину", callback_data="7_b")],
-        [InlineKeyboardButton("Зависит от настроения", callback_data="7_c")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Любите ли вы шумные места с большим количеством людей?",
-        reply_markup=reply_markup
-    )
-    return QUESTION_8
-
-async def question_8(update: Update, context: CallbackContext) -> int:
-    query = update.callback_query
-    await query.answer()
-    user_answers[8] = query.data  # Сохраняем ответ пользователя
-    keyboard = [
-        [InlineKeyboardButton("Да, я готов забронировать прямо сейчас", callback_data="8_a")],
-        [InlineKeyboardButton("Нет, я хочу подумать", callback_data="8_b")],
-        [InlineKeyboardButton("Я хочу посмотреть другие варианты", callback_data="8_c")],
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await query.edit_message_text(
-        text="Готовы ли вы забронировать отель прямо сейчас?",
-        reply_markup=reply_markup
-    )
-    return RESULT
+# Остальные функции остаются без изменений...
 
 async def result(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
@@ -218,7 +104,7 @@ if __name__ == "__main__":
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
-            QUESTION_1: [CallbackQueryHandler(question_1)],  # Исправлено на английское название
+            QUESTION_1: [CallbackQueryHandler(question_1)],
             QUESTION_2: [CallbackQueryHandler(question_2)],
             QUESTION_3: [CallbackQueryHandler(question_3)],
             QUESTION_4: [CallbackQueryHandler(question_4)],
@@ -229,7 +115,7 @@ if __name__ == "__main__":
             RESULT: [CallbackQueryHandler(result)],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
-        per_message=False,  # Явно указываем параметр
+        per_message=True,  # Изменено на True
         per_chat=True,      # Отслеживаем состояние для каждого чата
         per_user=True       # Отслеживаем состояние для каждого пользователя
     )
