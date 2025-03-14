@@ -13,40 +13,11 @@ from telegram.ext import (
 # Создаем Flask-приложение
 app = Flask(__name__)
 
-# Токен бота
+# Токен твоего бота
 TOKEN = "7575514249:AAEZd9zzOQKTJdRcwu9kgSG3SF0-7HQpa5k"
 
 # Состояния диалога
 QUESTION_1, QUESTION_2, QUESTION_3, QUESTION_4, QUESTION_5, QUESTION_6, QUESTION_7, QUESTION_8, RESULT = range(9)
-
-# Веса ответов для анализа
-WEIGHTS = {
-    "1_a": {"city_center": 3},  # Китай-город -> центр города
-    "1_b": {"business_area": 2},  # Курская/Сретенская -> деловой район
-    "1_c": {"business_area": 1, "nature": 1},  # Бауманская/Менделеевская -> немного деловой район, немного природа
-    "1_d": {"nature": 3},  # Глэмпинг -> природа
-    "2_a": {"city_center": 2, "business_area": 1},  # Активный отдых -> центр города и деловой район
-    "2_b": {"nature": 2},  # Спокойный отдых -> природа
-    "2_c": {"city_center": 1, "business_area": 1},  # Семейный отдых -> центр города и деловой район
-    "2_d": {"nature": 2},  # Романтический отдых -> природа
-    "3_a": {"city_center": 3},  # Люксовые апартаменты -> центр города
-    "3_b": {"business_area": 2},  # Стандартные номера -> деловой район
-    "3_c": {"nature": 1},  # Хостел или общежитие -> немного природа
-    "3_d": {"nature": 3},  # Кемпинг или палатка -> природа
-    # Добавьте остальные веса...
-}
-
-# URL-адреса изображений для вопросов (обновленные)
-IMAGE_URLS = {
-    1: "https://i.pinimg.com/736x/54/02/71/540271abaa48cf42b485ef8d29074ea9.jpg",  # Изображение для вопроса 1
-    2: "https://i.pinimg.com/736x/94/5f/b9/945fb9e523630f45170f4140cd82351b.jpg",  # Изображение для вопроса 2
-    3: "https://i.pinimg.com/736x/1a/b2/c7/1ab2c74722fc1a74d874af4071bede51.jpg",  # Изображение для вопроса 3
-    4: "https://i.pinimg.com/736x/af/ec/47/afec47f80d249b03627f8b7567a25340.jpg",  # Изображение для вопроса 4
-    5: "https://i.pinimg.com/736x/28/93/4b/28934bcf71cbf3264cb041effa5dbd9d.jpg",  # Изображение для вопроса 5
-    6: "https://i.pinimg.com/736x/f6/80/46/f68046553973f747006ed5946c84ede7.jpg",  # Изображение для вопроса 6
-    7: "https://i.pinimg.com/736x/d5/d3/a2/d5d3a2debe36dec850063d5150485295.jpg",  # Изображение для вопроса 7
-    8: "https://i.pinimg.com/736x/af/ec/47/afec47f80d249b03627f8b7567a25340.jpg",  # Изображение для вопроса 8
-}
 
 # Словарь для хранения ответов пользователя
 user_answers = {}
@@ -76,13 +47,6 @@ async def handle_question(update: Update, context: CallbackContext, question_id:
     next_question_id = question_id + 1
     if next_question_id > 8:
         return await result(update, context)
-
-    # Отправляем изображение
-    await context.bot.send_photo(
-        chat_id=query.message.chat_id,
-        photo=IMAGE_URLS[next_question_id],
-        caption=f"🌍 Вопрос {next_question_id}: ..."
-    )
 
     # Отправляем клавиатуру
     if next_question_id == 1:
@@ -164,21 +128,17 @@ async def result(update: Update, context: CallbackContext) -> int:
     query = update.callback_query
     await query.answer()
 
-    # Подсчет баллов
-    scores = {"city_center": 0, "business_area": 0, "nature": 0}
-    for answer in user_answers.values():
-        if answer in WEIGHTS:
-            for category, weight in WEIGHTS[answer].items():
-                scores[category] += weight
-
-    # Выбор победителя
-    max_category = max(scores, key=scores.get)
-    if max_category == "city_center":
+    # Анализ ответов
+    answers = list(user_answers.values())
+    if answers.count("1_a") + answers.count("2_a") + answers.count("3_a") > 4:
         hotel = "Китай-город"
         url = "https://norke.ru/hotel1"
-    elif max_category == "business_area":
+    elif answers.count("1_b") + answers.count("2_b") + answers.count("7_a") > 4:
         hotel = "Сретенская/Курская"
         url = "https://norke.ru/hotel2"
+    elif answers.count("1_c") + answers.count("2_c") + answers.count("3_c") > 4:
+        hotel = "Бауманская/Первомайская"
+        url = "https://norke.ru/hotel3"
     else:
         hotel = "Глэмпинг"
         url = "https://norke.ru/glamping"
