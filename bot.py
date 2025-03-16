@@ -13,7 +13,7 @@ from telegram.ext import (
 # Создаем Flask-приложение
 app = Flask(__name__)
 
-# Токен твоего бота
+# Токен бота
 TOKEN = "7575514249:AAEZd9zzOQKTJdRcwu9kgSG3SF0-7HQpa5k"
 
 # Состояния диалога
