@@ -19,6 +19,18 @@ TOKEN = "7575514249:AAEZd9zzOQKTJdRcwu9kgSG3SF0-7HQpa5k"
 # Состояния диалога
 QUESTION_1, QUESTION_2, QUESTION_3, QUESTION_4, QUESTION_5, QUESTION_6, QUESTION_7, QUESTION_8, RESULT = range(9)
 
+# URL-адреса изображений для вопросов
+IMAGE_URLS = {
+    1: "https://i.pinimg.com/736x/54/02/71/540271abaa48cf42b485ef8d29074ea9.jpg",  # Изображение для вопроса 1
+    2: "https://i.pinimg.com/736x/94/5f/b9/945fb9e523630f45170f4140cd82351b.jpg",  # Изображение для вопроса 2
+    3: "https://i.pinimg.com/736x/1a/b2/c7/1ab2c74722fc1a74d874af4071bede51.jpg",  # Изображение для вопроса 3
+    4: "https://i.pinimg.com/736x/af/ec/47/afec47f80d249b03627f8b7567a25340.jpg",  # Изображение для вопроса 4
+    5: "https://i.pinimg.com/736x/28/93/4b/28934bcf71cbf3264cb041effa5dbd9d.jpg",  # Изображение для вопроса 5
+    6: "https://i.pinimg.com/736x/f6/80/46/f68046553973f747006ed5946c84ede7.jpg",  # Изображение для вопроса 6
+    7: "https://i.pinimg.com/736x/d5/d3/a2/d5d3a2debe36dec850063d5150485295.jpg",  # Изображение для вопроса 7
+    8: "https://i.pinimg.com/736x/af/ec/47/afec47f80d249b03627f8b7567a25340.jpg",  # Изображение для вопроса 8
+}
+
 # Словарь для хранения ответов пользователя
 user_answers = {}
 
@@ -47,6 +59,13 @@ async def handle_question(update: Update, context: CallbackContext, question_id:
     next_question_id = question_id + 1
     if next_question_id > 8:
         return await result(update, context)
+
+    # Отправляем изображение
+    await context.bot.send_photo(
+        chat_id=query.message.chat_id,
+        photo=IMAGE_URLS[next_question_id],
+        caption=f"🌍 Вопрос {next_question_id}: ..."
+    )
 
     # Отправляем клавиатуру
     if next_question_id == 1:
@@ -152,57 +171,3 @@ async def result(update: Update, context: CallbackContext) -> int:
     await query.edit_message_text(
         text=f"🎉 Поздравляем! Ваш идеальный вариант - {hotel}.\n"
              f"Мы подготовили специальное предложение специально для вас!",
-        reply_markup=reply_markup
-    )
-    return ConversationHandler.END
-
-# Команда отмены
-async def cancel(update: Update, context: CallbackContext) -> int:
-    await update.message.reply_text("Тест завершен. Если хотите повторить, нажмите /start.")
-    return ConversationHandler.END
-
-# Маршрут для вебхука
-@app.route(f"/{TOKEN}", methods=["POST"])
-def webhook():
-    update = Update.de_json(request.get_json(force=True), application.bot)
-    application.process_update(update)
-    return "OK"
-
-# Запуск сервера
-if __name__ == "__main__":
-    # Инициализация Application
-    application = Application.builder().token(TOKEN).build()
-
-    # Добавление обработчиков
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-        states={
-            QUESTION_1: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 1))],
-            QUESTION_2: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 2))],
-            QUESTION_3: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 3))],
-            QUESTION_4: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 4))],
-            QUESTION_5: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 5))],
-            QUESTION_6: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 6))],
-            QUESTION_7: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 7))],
-            QUESTION_8: [CallbackQueryHandler(lambda u, c: handle_question(u, c, 8))],
-            RESULT: [CallbackQueryHandler(result)],
-        },
-        fallbacks=[CommandHandler('cancel', cancel)],
-        per_chat=True,
-        per_user=True
-    )
-    application.add_handler(conv_handler)
-
-    # Публичный URL от Render
-    render_url = "https://telegram-bot-d8rq.onrender.com"  # Замени на свой реальный Render URL
-
-    # Установка вебхука
-    application.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 8080)),  # Render использует переменную окружения PORT
-        url_path=TOKEN,
-        webhook_url=f"{render_url}/{TOKEN}"  # Полный URL для вебхука
-    )
-
-    # Запуск Flask-сервера
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))  # Render использует переменную окружения PORT
