@@ -53,10 +53,11 @@ async def handle_question(update: Update, context: CallbackContext, question_id:
     await query.answer()
 
     # Сохраняем ответ пользователя
-    user_answers[question_id] = query.data
+    if question_id > 1:
+        user_answers[question_id - 1] = query.data
 
     # Переходим к следующему вопросу
-    next_question_id = question_id + 1
+    next_question_id = question_id
     if next_question_id > 8:
         return await result(update, context)
 
@@ -140,7 +141,7 @@ async def handle_question(update: Update, context: CallbackContext, question_id:
         text=text,
         reply_markup=reply_markup
     )
-    return next_question_id
+    return next_question_id + 1
 
 # Функция анализа результатов
 async def result(update: Update, context: CallbackContext) -> int:
